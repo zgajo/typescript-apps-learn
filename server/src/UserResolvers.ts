@@ -1,6 +1,26 @@
-import { Resolver, Query, Mutation, Arg } from "type-graphql";
+import { compare, hash } from "bcrypt";
+import {
+  Arg,
+  Ctx,
+  Field,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+  UseMiddleware
+} from "type-graphql";
+import { createAccessToken, createRefreshToken } from "./auth";
 import { User } from "./entity/User";
-import { hash } from "bcrypt";
+import { MyContext } from "./MyContext";
+import { isAuth } from "./isAuth";
+
+@ObjectType()
+class LoginResponse {
+  @Field()
+  accessToken: String;
+  @Field()
+  user: User;
+}
 
 @Resolver()
 export class UserResolver {
@@ -8,6 +28,13 @@ export class UserResolver {
   hello() {
     return "hi!";
   }
+
+  @Query(() => String!)
+  @UseMiddleware(isAuth)
+  bye(@Ctx() { payload }: MyContext) {
+    return "userID: " + payload!.userId;
+  }
+
   @Query(() => [User]!)
   users() {
     return User.find();
@@ -30,5 +57,35 @@ export class UserResolver {
       console.log(error);
       return false;
     }
+  }
+
+  @Mutation(() => LoginResponse)
+  async login(
+    @Arg("email") email: string,
+    @Arg("password") password: string,
+    @Ctx() { res }: MyContext
+  ): Promise<LoginResponse> {
+    const user = await User.findOne({
+      where: { email }
+    });
+
+    if (!user) {
+      throw Error("Could not find user");
+    }
+
+    const validPassword = await compare(password, user.password);
+
+    if (!validPassword) {
+      throw Error("User credentials not found");
+    }
+
+    res.cookie("jid", createRefreshToken(user), {
+      httpOnly: true
+    });
+
+    return {
+      user,
+      accessToken: createAccessToken(user)
+    };
   }
 }
