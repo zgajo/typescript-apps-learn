@@ -13,6 +13,7 @@ import { createAccessToken, createRefreshToken } from "./auth";
 import { User } from "./entity/User";
 import { MyContext } from "./MyContext";
 import { isAuth } from "./isAuth";
+import { sendRefreshToken } from "./sendRefreshToken";
 
 @ObjectType()
 class LoginResponse {
@@ -79,9 +80,7 @@ export class UserResolver {
       throw Error("User credentials not found");
     }
 
-    res.cookie("jid", createRefreshToken(user), {
-      httpOnly: true
-    });
+    sendRefreshToken(res, createRefreshToken(user));
 
     return {
       user,

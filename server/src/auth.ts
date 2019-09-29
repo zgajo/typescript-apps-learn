@@ -8,7 +8,11 @@ export const createAccessToken = (user: User) => {
 };
 
 export const createRefreshToken = (user: User) => {
-  return sign({ userId: user.id }, process.env.JWR_REFRESH_SECRET!, {
-    expiresIn: "7d"
-  });
+  return sign(
+    { userId: user.id, tokenVersion: user.tokenVersion },
+    process.env.JWT_REFRESH_SECRET!,
+    {
+      expiresIn: "7d"
+    }
+  );
 };
