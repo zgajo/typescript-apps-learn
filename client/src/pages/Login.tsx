@@ -2,6 +2,6 @@ import React from "react";
 
 interface Props {}
 
-export default function Login(): Props {
+export const Login: React.FC<Props> = () => {
   return <div>Login</div>;
-}
+};

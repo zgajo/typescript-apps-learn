@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface Props {}
 
-export default function Home(): Props {
-  return <div>Home</div>;
-}
+export const Home: React.FC<Props> = () => {
+  const [data] = useState("Home");
+  return <div>{data}</div>;
+};

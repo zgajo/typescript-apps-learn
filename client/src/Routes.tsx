@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import { Home } from "./pages/Home";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
 
 const Routes: React.FC = () => {
   return (
@@ -10,23 +10,22 @@ const Routes: React.FC = () => {
       <div>
         <header>
           <div>
-            <Link to="/">To Home</Link>
+            <Link to="/">home</Link>
           </div>
           <div>
-            <Link to="/login">To login</Link>
+            <Link to="/register">register</Link>
           </div>
           <div>
-            <Link to="/register">To register</Link>
+            <Link to="/login">login</Link>
           </div>
         </header>
         <Switch>
-          <Route exact path="/" render={Home} />
-          <Route exact path="/login" render={Login} />
-          <Route exact path="/register" render={Register} />
+          <Route exact path="/" component={Home} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
         </Switch>
       </div>
     </BrowserRouter>
   );
 };
-
 export default Routes;
