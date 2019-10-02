@@ -8,6 +8,8 @@ import { UserResolver } from "./UserResolvers";
 import { createConnection } from "typeorm";
 import cookieParser from "cookie-parser";
 import { verify } from "jsonwebtoken";
+import cors from "cors";
+
 import { User } from "./entity/User";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
@@ -16,6 +18,12 @@ import { sendRefreshToken } from "./sendRefreshToken";
   const app = express();
 
   app.use(cookieParser());
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true
+    })
+  );
 
   app.get("/", (_req, res) => {
     res.send("Hello");
@@ -64,7 +72,7 @@ import { sendRefreshToken } from "./sendRefreshToken";
     context: ({ req, res }) => ({ req, res })
   });
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(4000, () => {
     console.log("express server started ");
