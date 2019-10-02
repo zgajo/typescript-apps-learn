@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Routes from "./Routes";
-import { setAcccessToken } from "./accessToken";
+import { setAccessToken } from "./accessToken";
 
 interface Props {}
 
@@ -15,7 +15,7 @@ const App: React.FC<Props> = () => {
       const data = await x.json();
 
       if (data.accessToken) {
-        setAcccessToken(data.accessToken);
+        setAccessToken(data.accessToken);
       }
 
       setLoading(false);
