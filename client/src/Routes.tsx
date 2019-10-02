@@ -4,8 +4,13 @@ import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Bye } from "./pages/Bye";
+import { useMeQuery } from "./generated/graphql";
 
 const Routes: React.FC = () => {
+  const { data } = useMeQuery({
+    fetchPolicy: "network-only"
+  });
+
   return (
     <BrowserRouter>
       <div>
@@ -22,6 +27,7 @@ const Routes: React.FC = () => {
           <div>
             <Link to="/bye">Bye</Link>
           </div>
+          <h1>{data && data.me ? "Hi " + data.me.email : null}</h1>
         </header>
         <Switch>
           <Route exact path="/" component={Home} />
